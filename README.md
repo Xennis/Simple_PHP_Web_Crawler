@@ -5,11 +5,11 @@
 * Create a database table
 
 ```
-CREATE TABLE  `MY-DB`.`swc_url` (
-  `url` VARCHAR( 255 ) NOT NULL ,
-  `date` INT( 10 ) NOT NULL ,
-  `status` TINYINT( 1 ) NOT NULL ,
-PRIMARY KEY (  `url` )
+CREATE TABLE swc_url (
+  url    VARCHAR(255) NOT NULL,
+  dat    INT(10)      NOT NULL,
+  status TINYINT(1)   NOT NULL,
+  PRIMARY KEY (url)
 )
 ```
 
