@@ -1,13 +1,14 @@
 <?php
 
 /**
- * Description of SimpleWebCrawler
+ * Simple Web Crawler
  *
+ * Crawls the web starting from a given URL.
  */
 class SimpleWebCrawler {
 
 	/**
-	 * Match pattern to find HTTP URLs.
+	 * Match pattern to find HTTP URLs
 	 *
 	 * @var string Pattern
 	 */
@@ -19,6 +20,13 @@ class SimpleWebCrawler {
 	 * @var boolean True, if crawler runs.
 	 */
 	private $_isCrawling = false;
+	
+	/**
+	 * Name of the database table
+	 * 
+	 * @var string
+	 */
+	private $_db_table = 'swc_url';
 	
 	/**
 	 * 
@@ -40,9 +48,9 @@ class SimpleWebCrawler {
 
 		$count = count($patterns[2]);
 		for($i = 0; $i < $count; $i++) {
-			$patterns[2][$i] = $this->_get_main_url(htmlentities('http://'.$patterns[2][$i]));		// Nur Haupturl speichern			
+			$patterns[2][$i] = $this->_get_main_url(htmlentities('http://'.$patterns[2][$i])); // Save main url only		
 		}
-		return array_unique($patterns[2]);											// Doppelte Einträge löschen
+		return array_unique($patterns[2]); // Delete duplicate entries
 	}
 
 	/**
@@ -52,7 +60,7 @@ class SimpleWebCrawler {
 	 * @return boolean Result of the query
 	 */
 	private function _url_insert($url){
-		$insert_url = "INSERT INTO links (url, date) VALUES ('$url', '".time()."')";
+		$insert_url = "INSERT INTO $this->_db_table (url, date) VALUES ('$url', '".time()."')";
 		return mysql_query($insert_url);
 	}
 
@@ -64,7 +72,7 @@ class SimpleWebCrawler {
 	 * @return boolean Result of the query
 	 */
 	private function _url_update_status($url, $status){
-		$update_url = "UPDATE links
+		$update_url = "UPDATE $this->_db_table
 						SET status = '$status'
 						WHERE url = '$url'";
 		return mysql_query($update_url);
@@ -77,7 +85,7 @@ class SimpleWebCrawler {
 	 */
 	public function get_next_url(){
 		$select_url = "SELECT url
-						FROM links
+						FROM $this->_db_table
 						WHERE status = '0'
 						LIMIT 1";
 		$query_select_url = mysql_query($select_url);
